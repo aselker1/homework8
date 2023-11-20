@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+ const [names, setNames] = useState(JSON.parse(localStorage.getItem('names')) || []);
+ const [newName, setNewName] = useState('');
+
+ useEffect(() => {
+    localStorage.setItem('names', JSON.stringify(names));
+ }, [names]);
+
+
+ const handleSubmit = (e) => {
+    e.preventDefault();
+    setNames((prevNames) => [...prevNames, { id: Date.now(), name: newName }]);
+    setNewName('');
+ };
+
+ return (
+    <div>
+      <form onSubmit={handleSubmit}>
+      <input type="text" value={newName} onChange={(e)=>setNewName(e.target.value)}/>
+        <button type="submit">Add</button>
+      </form>
+      <ul>
+        {names.map((name) => (
+          <li key={name.id}>{name.name}</li>
+        ))}
+      </ul>
     </div>
-  );
-}
+ );
+};
 
 export default App;
